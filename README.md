@@ -1,129 +1,105 @@
-# Gradient Descent
+# Descenso de Gradiente / Encuentra el fondo del mar
 
-A game of learning the concepts behind gradient descent by exploring the depths looking for
-treasure.
+Un juego para aprender los conceptos detrás del descenso de gradiente explorando las profundidades en busca de un tesoro.
 
-Developed for the I AM AI exhibition by IMAGINARY.
+Desarrollado para la exposición I AM AI por IMAGINARY.
 
-## Configuration
+## Configuración
 
-A config file is loaded when opening the application. It supports the following keys:
+Al abrir la aplicación se carga un archivo de configuración. Admite las siguientes claves:
 
-- **defaultLanguage** (string, default: `"en"`): Default language to use. Can be overriden by the
-  `lang` query string.
-- **languages** (array of strings, default: all languages present in `tr.json`): Selection and order of language codes for i18n.
-- **useGamepads** (boolean, default: `true`): Enables gamepad use.
-- **useScreenControls** (boolean, default: `true`): Shows on-screen controllers.
-- **useKeyboardControls** (boolean, default: `true`): Control the game via keyboard (player 1: <kbd>
-  ←</kbd><kbd>↓</kbd><kbd>→</kbd> resp. <kbd>←</kbd><kbd>Space</kbd><kbd>→</kbd>, player 2: <kbd>
-  A</kbd><kbd>S</kbd><kbd>D</kbd>).
-- **botType** (`"none", "random", "gradient-descent", "tangent-intersection"` or `null`,
-  default: `null`): Set the type of bot player to use. Let the user choose if `null`.
-- **botTypeLabels** (`"difficulty"` or `"strategy"`, default: `"difficulty"`): Set the type of
-  labels used to describe the bot type (`"difficulty"`: difficulty level, `"strategy"`: name of the
-  bot strategy)
-- **showBotTypeTips** (boolean, default: `false`): Show longer descriptions for bot types.
-  Tips are optional, and can be set in the translation files with the keys
-  `bot-types.difficulty.<type>-tip` o `bot-types.strategy.<type>-tip`.
-- **maxPlayers** (integer, default: 2): Maximum number of players (between 1 and 4).
-- **maxTime** (integer or string `"Infinity"`, default: `"Infinity"`): Maximum number seconds until
-  the game is over.
-- **maxProbes** (integer or string `"Infinity"`, default: `"Infinity"`): Maximum number of probes
-  until the game is over.
-- **showSeaFloor** (boolean, default: `false`): Make the sea floor visible from the very beginning.
-- **maxDepthTilt** (float >= 0, default: `4`): Tilt the sea floor generation towards shallow [0,1)
-  or deep (1,∞).
-- **map** (array or `null`, default: `null`): If `null`, auto-generate a map. Otherwise, use the
-  supplied map. See [below](#setting-a-sea-floor-map) for details.
-- **continuousGame** (boolean, default: `false`): Skip the title screen and time limit,
-  auto-restart.
-- **showDemo** (boolean, default: `false`): Alternate between the title screen and demo mode.
-- **demoDuration** (integer, default: `18000`): Duration of the demo mode in milliseconds.
-- **fullScreenButton** (boolean, default: `true`): Show a button to toggle full-screen mode.
-- **languageButton** (boolean, default: `true`): Show a button to cycle through the languages defined via `languages`.
-- **debugControls** (boolean, default: `false`): Shows debugging data for controls.
-- **debugLog** (boolean, default: `false`): Shows debugging messages in the console.
+- **defaultLanguage** (cadena, predeterminado: `"es"`): Idioma predeterminado a utilizar. Puede ser reemplazado por la cadena de consulta `lang`.
+- **languages** (matriz de cadenas, predeterminado: todos los idiomas presentes en `tr.json`): Selección y orden de códigos de idioma para i18n.
+- **useGamepads** (booleano, predeterminado: `verdadero`): Habilita el uso de mandos.
+- **useScreenControls** (booleano, predeterminado: `verdadero`): Muestra los controles en pantalla.
+- **useKeyboardControls** (booleano, predeterminado: `verdadero`): Controla el juego mediante teclado (jugador 1: <kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> o respectivamente <kbd>←</kbd><kbd>Espacio</kbd><kbd>→</kbd>; jugador 2: <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>).
+- **botType** (`"ninguno"`, `"aleatorio"`, `"descenso-de-gradiente"`, `"intersección-tangente"` o `nulo`, predeterminado: `nulo`): Establece el tipo de bot a utilizar. Si es `nulo`, permite que el usuario elija.
+- **botTypeLabels** (`"dificultad"` o `"estrategia"`, predeterminado: `"dificultad"`): Define el tipo de etiquetas para describir el bot (`"dificultad"`: nivel de dificultad; `"estrategia"`: nombre de la estrategia del bot).
+- **showBotTypeTips** (booleano, predeterminado: `falso`): Muestra descripciones extendidas para los tipos de bot. Las sugerencias son opcionales y pueden configurarse en los archivos de traducción con las claves `bot-types.dificultad.<tipo>-tip` o `bot-types.estrategia.<tipo>-tip`.
+- **maxPlayers** (entero, predeterminado: 2): Número máximo de jugadores (entre 1 y 4).
+- **maxTime** (entero o cadena `"Infinito"`, predeterminado: `"Infinito"`): Tiempo máximo en segundos hasta que finalice el juego.
+- **maxProbes** (entero o cadena `"Infinito"`, predeterminado: `"Infinito"`): Número máximo de sondas hasta que finalice el juego.
+- **showSeaFloor** (booleano, predeterminado: `falso`): Hace visible el fondo marino desde el inicio.
+- **maxDepthTilt** (flotante ≥ 0, predeterminado: `4`): Inclina la generación del fondo marino hacia zonas superficiales [0,1) o profundas (1,∞).
+- **map** (matriz o `nulo`, predeterminado: `nulo`): Si es `nulo`, genera automáticamente un mapa. De lo contrario, usa el mapa proporcionado. Consulta [más abajo](#configurar-un-mapa-del-fondo-marino) para detalles.
+- **continuousGame** (booleano, predeterminado: `falso`): Omite la pantalla de título y el límite de tiempo, reinicia automáticamente.
+- **showDemo** (booleano, predeterminado: `falso`): Alterna entre la pantalla de título y el modo demo.
+- **demoDuration** (entero, predeterminado: `18000`): Duración del modo demo en milisegundos.
+- **fullScreenButton** (booleano, predeterminado: `verdadero`): Muestra un botón para alternar el modo pantalla completa.
+- **languageButton** (booleano, predeterminado: `verdadero`): Muestra un botón para alternar entre los idiomas definidos en `languages`.
+- **debugControls** (booleano, predeterminado: `falso`): Muestra datos de depuración para los controles.
+- **debugLog** (booleano, predeterminado: `falso`): Muestra mensajes de depuración en la consola.
 
-By default, the config file `config.json` is used. However, this file name can be overwritten by
-setting the `config` query string variable, e.g. `index.html?config=config.local.json`.
+Por defecto se usa el archivo de configuración `config.json`. Sin embargo, este nombre puede modificarse mediante la variable de consulta `config`, por ejemplo: `index.html?config=config.local.json`.
 
-## Remote controlling the game
+## Control remoto del juego
 
-The game adds a `game` object to the global scope.
+El juego añade un objeto `game` al ámbito global.
 
-### Setting a sea floor map
+### Configurar un mapa del fondo marino
 
-A sea floor map is just an array of numbers between 0 (close to the water surface) and 1 (distant
-from the water surface). The array is used to generate a polyline from the left side of the screen
-to the right having equidistant nodes at the elements of the map array.
+Un mapa del fondo marino es simplemente una matriz de números entre 0 (cerca de la superficie) y 1 (lejos de la superficie). La matriz se usa para generar una polilínea desde el lado izquierdo de la pantalla hasta el derecho, con nodos equidistantes según los elementos de la matriz.
 
-Maps can be set via `game.setMap(map)`, e.g. setting a very simple V-shaped map could look like
-this:
+Los mapas pueden establecerse mediante `game.setMap(map)`. Por ejemplo, un mapa en forma de V muy simple sería:
 
 ```
 game.setMap([0, 1, 0]);
 ```
 
-A simple parabola-like map can be defined like so:
+Un mapa similar a una parábola podría definirse así:
 
 ```
 const parabola = t => 1 - Math.pow(2 * t - 1, 2);
-const createMap = (distance, length) => Array.from(
-  { length: length },
-  (_, i) => distance(i / (length - 1))
+const crearMapa = (distancia, longitud) => Array.from(
+  { length: longitud },
+  (_, i) => distancia(i / (longitud - 1))
 );
-game.setMap(createMap(parabola, 100));
+game.setMap(crearMapa(parabola, 100));
 ```
 
-Passing `null` as map will revert to auto-generating a new map for every round of the game.
+Al pasar `nulo` como mapa, se vuelve a generar automáticamente uno nuevo cada ronda.
 
-Whenever another game round is started, the current map will be output to the developer console of
-the browser. This allows to store the current (possibly auto-generated) map elsewhere and re-use it
-later.
+Al iniciar una nueva ronda, el mapa actual se muestra en la consola del navegador. Esto permite almacenarlo y reutilizarlo posteriormente.
 
-Note that the map is only applied for new rounds of the game, not the current one.
+Nota: El mapa solo se aplica a nuevas rondas del juego, no a la actual.
 
-### Setting the game mode
+### Establecer el modo de juego
 
-The game consists of the modes `title`, `numplayers` and `play`. You can switch to another mode or
-re-enter the current mode via `game.setMode(mode)`. E.g. to load a map and play a new round of the
-game, run
+El juego consta de los modos `titulo`, `numjugadores` y `jugar`. Puedes cambiar de modo o reingresar al actual mediante `game.setMode(modo)`. Por ejemplo, para cargar un mapa y jugar una nueva ronda:
 
 ```
-const map = ...;
-game.setMap(map);
-game.setMode('play');
+const mapa = ...;
+game.setMap(mapa);
+game.setMode('jugar');
 ```
 
-### Showing the sea floor
+### Mostrar el fondo marino
 
-If the game is in `play` mode, the sea floor of the current game round can be shown via
-`game.showSeaFloor(animate)`. If `animate` is true, the sea floor will be uncovered slowly.
-Otherwise, it will be shown immediately. This method has no effect in other game modes.
+Si el juego está en modo `jugar`, el fondo marino de la ronda actual puede mostrarse mediante `game.showSeaFloor(animar)`. Si `animar` es `verdadero`, el fondo se revelará gradualmente. De lo contrario, aparecerá inmediatamente. Este método no tiene efecto en otros modos.
 
-## Compilation
+## Compilación
 
-This web application is built using several compilable languages:
+Esta aplicación web se construye usando varios lenguajes compilables:
 
-- The HTML pages are built from **pug** template files.
-- The CSS stylesheet is pre-compiled from **sass** files.
-- The JS scripts are trans-compiled from **es6** (ES2015) files.
+- Las páginas HTML se generan desde plantillas **pug**.
+- La hoja de estilos CSS se precompila desde archivos **sass**.
+- Los scripts JS se transcompilan desde archivos **es6** (ES2015).
 
-To make any modifications re-compilation is necessary. You should install:
+Para aplicar modificaciones es necesaria la recompilación. Debes instalar:
 
-- **node** and **npm**
-- **gulp** (install globally)
+- **node** y **npm**
+- **gulp** (instalar globalmente)
 
-Afterwards run the following in the command line to install dependencies:
+Luego ejecuta en la línea de comandos para instalar dependencias:
 
 ```
 cd src
 npm install
 ```
 
-After the dependencies have been installed successfully, you can compile as needed:
+Tras instalar las dependencias, compila según necesidad:
 
-- **sass (stylesheets)**
+- **sass (hojas de estilo)**
     ```
     gulp styles
     ```
@@ -131,61 +107,58 @@ After the dependencies have been installed successfully, you can compile as need
     ```
     gulp scripts
     ```
-- **dependencies (ES6)**
+- **dependencias (ES6)**
     ```
     gulp dependencies
     ```
-- **pug (HTML pages)**
+- **pug (páginas HTML)**
     ```
     gulp html
     ```
-- **all**
+- **todo**
     ```
     npm run build
     ```
-    or, respectively
+    o respectivamente
     ```
     gulp build
     ```
-- **watch for changes and recompile as needed**
+- **vigilar cambios y recompilar automáticamente**
     ```
-    gulp build
+    gulp watch
     ```
 
-Note that `gulp html` needs to be run after `gulp styles`, `gulp scripts` and `gulp dependencies`
-since the html files need to be updated in order to point to the updated build artifacts.
-`gulp build` will run all task in order and take care of `html`.
+Nota: `gulp html` debe ejecutarse después de `gulp styles`, `gulp scripts` y `gulp dependencies` porque los archivos HTML deben actualizarse para apuntar a los artefactos compilados. `gulp build` ejecuta todas las tareas en orden.
 
-### Serving and automatic reloading
+### Servir con recarga automática
 
 ```
 cd src
-npx reload -d .. -w ../index.html -p [free port]
+npx reload -d .. -w ../index.html -p [puerto libre]
 ```
 
-### Internationalization
+### Internacionalización
 
-To add a new translation, the following steps are necessary:
+Para añadir una traducción:
 
-- Figure out the language code for the language you want to add, e.g. `eo` for Esperanto.
-- Copy a locale file from `tr` for a language you are familiar with and rename its basename to match the new language code, e.g. copy `tr/en.json` to `tr/eo.json`.
-- Translate all the texts in the new locale file. Preserve whitespace.
-- Add the new language code and its endonym to `tr.json`.
-- Add your name to the list of contributors below.
+- Determina el código de idioma (ej: `eo` para esperanto).
+- Copia un archivo de `tr` (ej: `tr/en.json` → `tr/eo.json`).
+- Traduce todos los textos en el nuevo archivo. Conserva los espacios.
+- Añade el código del idioma y su autónimo a `tr.json`.
+- Incluye tu nombre en la lista de colaboradores.
 
-## Credits
+## Créditos
 
-Developed by Christian Stussak and Eric Londaits, based on a concept by Aaron Montag, IMAGINARY
-gGmbH.
+Desarrollado por Christian Stussak y Eric Londaits, basado en un concepto de Aaron Montag, IMAGINARY gGmbH.
 
-### Translations
+### Traducciones
 
-- Dutch: Jarne Renders
-- English: Christian Stussak, Eric Londaits
-- French: Barbara Knapiak, Daniel Ramos
-- German: Christian Stussak, Andreas Daniel Matt
-- Spanish: Daniel Ramos
+- Holandés: Jarne Renders
+- Inglés: Christian Stussak, Eric Londaits
+- Francés: Barbara Knapiak, Daniel Ramos
+- Alemán: Christian Stussak, Andreas Daniel Matt
+- Español: Daniel Ramos
 
-## License
+## Licencia
 
-Copyright (c) 2020 IMAGINARY gGmbH Licensed under the MIT License (see LICENSE)
+Copyright (c) 2020 IMAGINARY gGmbH. Licenciado bajo MIT License (ver LICENSE)
